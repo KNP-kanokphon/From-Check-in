@@ -1,4 +1,4 @@
-const proviceService = require("../services/services.province");
+const proviceService = require("../services/services.province.js");
 
 //Get Data All
 exports.findAll = (req, res) => {

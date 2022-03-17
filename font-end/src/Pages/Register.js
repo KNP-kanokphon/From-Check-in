@@ -61,6 +61,9 @@ export default function Register() {
   //setStart CheckBox
   const [radiotest, setRadioOne] = useState([]);
 
+  //setChoce
+  const [choicevalue, setChoice] = useState([]);
+
 
 
   const geographySelected = async (value) => {
@@ -146,17 +149,27 @@ export default function Register() {
   }
   // function radio_onChange
 
-  const [objectRedio, settestdata] = useState([]);
+  const [objectRedio, setRediodata] = useState([]);
   function radio_onChange(value, checkedValues) {
     if (value !== []) {
       objectRedio['section' + checkedValues] = value;
-      settestdata({ ...objectRedio });
+      setRediodata({ ...objectRedio });
     }
     setRadioOne(value)
   }
+  const [objectChoce, setChocevalue] = useState([]);
+  function input_onChang(value, checkedValues) {
+    if (value !== []) {
+      objectChoce['section' + checkedValues] = value;
+      setChocevalue({ ...objectChoce });
+    }
+    setChoice(value)
+  }
+
 
   const testdata = () => {
     console.log(objectRedio)
+    console.log(objectChoce)
   }
 
   const showChoice = (id) => {
@@ -466,6 +479,11 @@ export default function Register() {
                               ))}
                             </Space>
                           </Checkbox.Group>
+                          <Input.Group >
+                            {showChoice(index.section_id).map((keym) => (
+                              <Input placeholder="Job Title" id={keym.nameChoce} onChange={(e) => { input_onChang(e.target.value, index.section_id) }} />
+                            ))}
+                          </Input.Group>
                         </Form.Item>
                       </Form.Item>
                     </Col>
