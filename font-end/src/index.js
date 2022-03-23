@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Register from './Pages/Register';
+import Application from './Application';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Register />
-  </React.StrictMode>,
+  <Application />,
   document.getElementById('root')
 );
 // If you want to start measuring performance in your app, pass a function

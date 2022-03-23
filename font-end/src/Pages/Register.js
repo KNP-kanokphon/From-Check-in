@@ -22,11 +22,13 @@ import {
   message,
   Space,
   Checkbox,
+  Image,
+  Upload,
 } from 'antd';
-
 
 import { ConsoleSqlOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { render } from '@testing-library/react';
+
 const axios = require('axios');
 const { Header, Content, Footer, Sider } = Layout;
 const { Option } = Select;
@@ -70,7 +72,6 @@ export default function Register() {
     const getIdprovince = await axios.get(`${urlBackend}/api/getGeography/${value}`);
     setDataProvinc(getIdprovince.data)
     if (getIdprovince.data !== []) {
-
       // setDataProvinc([]);
       // setDistrict([]);
     }
@@ -141,11 +142,8 @@ export default function Register() {
   }
 
   const sectionByid = async (id) => {
-    // console.log(id)
     const resualSectionByid = await getSectionByid(id);
     await console.log(resualSectionByid)
-    // await setSection(resualSectionByid);
-    // await console.log(section)
   }
   // function radio_onChange
 
@@ -166,11 +164,68 @@ export default function Register() {
     setChoice(value)
   }
 
+  let Imagecount = [1, 2, 3];
+  const [BaseImage, setBaseImage] = useState("");
+  const [ObjectFile, setObjectFile] = useState([]);
 
-  const testdata = () => {
-    console.log(objectRedio)
-    console.log(objectChoce)
+  const HandlerImage = async (event, index) => {
+
+    const id = index;
+    let objectData = []
+    let listData = {}
+    // const base64 = event.file
+    const files = await getBase64(event.file);
+    await console.log(files)
+    if (ObjectFile.length > 0) {
+      if (ObjectFile.find(item => item.id === id)) {
+
+        const index = ObjectFile.findIndex(o => {
+          return o.id === id;
+        })
+        if (index !== -1) ObjectFile.splice(index, 1);
+
+        listData = {
+          id: id,
+          data: files
+        }
+        objectData.push(...ObjectFile)
+        objectData.push(listData)
+      } else {
+        listData = {
+          id: id,
+          data: files
+        }
+        objectData.push(...ObjectFile)
+        objectData.push(listData)
+      }
+    } else {
+      listData = {
+        id: id,
+        data: files
+      }
+      objectData.push(listData)
+    }
+    setObjectFile(objectData);
   }
+
+
+  const handleSubmission = () => {
+    console.log("🚀 ~ file: Register.js ~ line 234 ~ handleSubmission ~ ObjectFile", ObjectFile[0].data)
+  };
+
+
+  function getBase64(event) {
+    // console.log(event)
+    let file = event.originFileObj;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+
 
   const showChoice = (id) => {
     let objCh = [];
@@ -216,7 +271,6 @@ export default function Register() {
             <Col offset={6} span={2}>Time</Col>
             <Col span={8}>Dec 22, 2021 09:30 AM in Bangkok</Col>
           </Row>
-          <Button onClick={testdata}>AAAA</Button>
         </Form>
         <Layout>
           <Content>
@@ -423,44 +477,8 @@ export default function Register() {
                   </Col>
                 </Row>
               </Form>
-
-              {/* <Form layout="horizontal">
-                <Row>
-                  <Col span={12} offset={6}>
-                    <Form.Item style={{ marginBottom: 0 }}>
-                      <Form.Item
-                        label={question}
-                        name="userName"
-                        style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
-                      >
-                        <Checkbox.Group style={{ width: '100%' }} onChange={radio1_onChange}>
-                          <Space direction="vertical">
-                            <Checkbox value='1'>{label_1}</Checkbox>
-                            <Checkbox value='2'>{label_2}</Checkbox>
-                            <Checkbox value='3'>{label_3}</Checkbox>
-                            <Checkbox value='4'>{label_4}</Checkbox>
-                            <Radio value={4}>
-                              More...
-                              {value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
-                            </Radio>
-                          </Space>
-                        </Checkbox.Group>
-                      </Form.Item>
-
-                      <Form.Item label="Lastname"
-                        name="lastName"
-                        style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
-                      >
-                        <Input placeholder="Lastname"
-                          onChange={(e) => { setFromLastname(e.target.value) }}
-                        />
-                      </Form.Item>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Form> */}
               {question.map((index) => (
-                <Form layout="horizontal">
+                <Form layout="horizontal" key={index.section_id}>
                   <Row>
                     <Col span={12} offset={6}>
                       <Form.Item style={{ marginBottom: 0 }}>
@@ -475,21 +493,79 @@ export default function Register() {
                           >
                             <Space direction="vertical">
                               {showChoice(index.section_id).map((keym) => (
-                                <Checkbox value={keym.nameChoce}>{keym.nameChoce}</Checkbox>
+                                <Checkbox key={index} value={keym.nameChoce}>{keym.nameChoce}</Checkbox>
                               ))}
                             </Space>
                           </Checkbox.Group>
-                          <Input.Group >
-                            {showChoice(index.section_id).map((keym) => (
-                              <Input placeholder="Job Title" id={keym.nameChoce} onChange={(e) => { input_onChang(e.target.value, index.section_id) }} />
-                            ))}
-                          </Input.Group>
                         </Form.Item>
                       </Form.Item>
                     </Col>
                   </Row>
                 </Form>
               ))}
+              <Form layout="horizontal">
+                <Row>
+                  <Col span={24} offset={6}>
+                    <Form.Item style={{ marginBottom: 0 }}>
+                      <Form.Item
+                        label="ข้อกำหนดเงื่อนใข นโยบายความเป็นส่วนตัว"
+                        key=""
+                        id=""
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+                      >
+                        <Checkbox.Group style={{ width: '100%' }}
+                        >
+                          <Space direction="vertical">
+                            <Checkbox value="">ฉันได้อ่านและเข้าใจข้อกำหนดและเงื่อนใขนโยบายความเป็นส่วนตัวของ informa Markets เรียบร้อยแล้ว</Checkbox>
+                          </Space>
+                        </Checkbox.Group>
+                      </Form.Item>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form>
+              <Form layout="horizontal">
+                <Row>
+                  <Col span={24} offset={6}>
+                    <Form.Item style={{ marginBottom: 0 }}>
+                      <Form.Item
+                        label="การยอมรับ"
+                        key=""
+                        id=""
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+                      >
+                        <Checkbox.Group style={{ width: '100%' }}
+                        >
+                          <Space direction="vertical">
+                            <Checkbox value="">ฉันยอมรับว่าหลังจากการลงทะเบียนเข้าร่วม ProPak Asia Webinar แล้วบริษัท Informa Markets ผู้สนับสนุน พันธมิตรการจัดงาน อาจติดต่อฉันเกี่ยวกับผลิตภัณฑ์และบริการ เพื่อแจ้งข้อมูล ข่าวสาร อัปเดท โปรโมชั่นที่เกี่ยวข้องและข่อมูลเดี่ยวกับกิจกรรมต่างๆ ในอนาคต</Checkbox>
+                          </Space>
+                        </Checkbox.Group>
+                      </Form.Item>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form>
+              <Form layout="horizontal">
+                <Row>
+                  <Col span={24} offset={6}>
+                    <Form.Item style={{ marginBottom: 0 }}>
+                      <Form.Item
+                        label="ข้อมูลทีคุณให้ใว้เมื่อลงทะเบียนจะถูกแชร์กับเจ้าของบัญชีและเจ้าของบัญชีสามารถใช้และแบ่งปันได้โดยเป็นไปคามข้อกำหนดและนโยบายความเป็นส่วนตัว"
+                        key=""
+                        id=""
+                        style={{ display: 'inline-block', }}
+                      >
+                        <Checkbox.Group style={{ width: '100%' }}
+                        >
+                          <Space direction="vertical">
+                            <Checkbox value="">ยอมรับ</Checkbox>
+                          </Space>
+                        </Checkbox.Group>
+                      </Form.Item>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form>
               <Form layout="horizontal">
                 <Row
                   style={{ justify: 'Horizontal' }}>
@@ -505,6 +581,39 @@ export default function Register() {
                   <Col span={10}></Col>
                 </Row>
               </Form>
+              <Form className="site-layout-background" style={{ textAlign: 'center', padding: 25, fontFamily: 'BlinkMacSystemFont', fontSize: 30 }}>
+                Speakers
+              </Form>
+              {Imagecount.map((index) => (
+                <Col offset={6} span={12} style={{ padding: 10 }}
+                  key={index}>
+                  <Space size={12}
+                  >
+                    <Image width={200} src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                    <Col >Dec 22, 2021 09:30 AM in Bangkok</Col>
+                    <Upload onChange={(e) => HandlerImage(e, index)} >
+                      <Button>
+                        <UploadOutlined /> Upload
+                      </Button>
+                    </Upload>
+                  </Space>
+                </Col>
+              ))}
+              <Form layout="horizontal">
+                <Row
+                  style={{ justify: 'Horizontal' }}>
+                  <Col span={10}></Col>
+                  <Col span={4}>
+                    <Button
+                      type="primary"
+                      onClick={handleSubmission}
+                      block>
+                      Confrim
+                    </Button>
+                  </Col>
+                  <Col span={10}></Col>
+                </Row>
+              </Form>
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
@@ -513,5 +622,3 @@ export default function Register() {
     </>
   );
 };
-
-// ReactDOM.render(<Demo />, document.getElementById('container'));
