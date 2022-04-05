@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Register from './Pages/Register';
+// import Register from './Pages/Register';
 import Application from './Application';
 import reportWebVitals from './reportWebVitals';
 

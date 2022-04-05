@@ -34,7 +34,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const { Option } = Select;
 const urlBackend = `http://localhost:5000`;
 
-export default function Register() {
+export function Register() {
 
   const [Geography, setGeography] = useState([]);
   const [DataProvinc, setDataProvinc] = useState([]);

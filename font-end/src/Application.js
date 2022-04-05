@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
-import Register from './Pages/Register';
+import { BrowserRouter as Router, Route, Routes, Redirect } from "react-router-dom";
+import { Register } from './Pages/Register';
+import { Adminpage } from './Pages/Admin';
 
 const Application = () => {
 
     return (
-        <div>
-            <Switch>
-                <Route path="/">
-                    <Register />
-                </Route>
-            </Switch>
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Register />} />
+                <Route path="/admin" element={<Adminpage />} />
+            </Routes>
+        </Router>
     );
 }
 
